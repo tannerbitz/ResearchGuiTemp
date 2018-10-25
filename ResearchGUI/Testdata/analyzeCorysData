@@ -1,0 +1,9 @@
+data = load('Patient1_VolReflex_AnklePosNeutral_PF.txt');
+
+meas = 2.*data(:,1);
+ref = data(:,2);
+
+hold on
+plot(meas)
+plot(ref)
+hold off

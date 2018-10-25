@@ -1,0 +1,8 @@
+PRBS Trials with Abraham 8/28/18
+
+Trial3 - Tsw = 0.250s
+Trial4 - Tsw = 1.000s
+Trial5 - Tsw = 0.500s
+Trial6 - Tsw = 0.500s
+Trial7 - Tsw = 0.750s
+Trial8 - Tsw = 0.750s

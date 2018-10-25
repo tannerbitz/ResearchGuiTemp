@@ -1,0 +1,4 @@
+Patient 2
+Abraham Rosengard
+Date: 9/17/18
+Notes: EMGs don't appear to be working even though they're hooked up
