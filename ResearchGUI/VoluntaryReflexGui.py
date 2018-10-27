@@ -464,7 +464,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 mvcserialval = abs(min(mvcserialvals))
                 mvctable['df'] = mvcserialval*serval2torqueNm
                 self.tablewidget_mvc.setItem(0, 1, QTableWidgetItem(str(round(mvctable['df'],2))))
-            setDfPfMvc()
+            self.setDfPfMvc()
 
     def setDfPfMvc(self):
         global mvctable
