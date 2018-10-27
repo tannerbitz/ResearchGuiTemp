@@ -38,7 +38,7 @@ measuredsignalchannel = None
 topborder = None
 bottomborder = None
 mvctable = {'pf': None, 'df': None, 'dfpf': None}
-percentmvc = 0.2
+percentmvc = 0.3
 volreflexflexion = None
 refsignaltype = None
 refsignalfreq = None
@@ -777,12 +777,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_setpatientnumber.clicked.connect(self.setPatientNumber)
         self.btn_resetserial.clicked.connect(self.resetSerial)
         self.btn_startmvctrial.clicked.connect(self.startMvcTrial)
-        self.btn_setmvcmanual.clicked.connect(self.getMvcFile)
+        self.btn_getmvcfiles.clicked.connect(self.getMvcFile)
         self.btn_importmvcfiles.clicked.connect(self.importMvcFiles)
         self.btn_startvolreflextrial.clicked.connect(self.startVoluntaryReflexTrail)
         self.btn_minimize.clicked.connect(self.minimizeWindow)
         self.btn_maximize.clicked.connect(self.maximizeWindow)
         self.btn_close.clicked.connect(self.closeWindow)
+        self.btn_setmvcmanual.clicked.connect(self.setmvcmanual)
+
+    def setmvcmanual(self):
+        mvctable['df'] = float(self.lineedit_dfmvcman.text())
+        mvctable['pf'] = float(self.lineedit_pfmvcman.text())
+        self.tablewidget_mvc.setItem(0, 0, QTableWidgetItem(str(round(mvctable['pf'],2))))
+        self.tablewidget_mvc.setItem(0, 1, QTableWidgetItem(str(round(mvctable['df'],2))))
+        self.setDfPfMvc()
 
     def startSettingsTab(self):
 
