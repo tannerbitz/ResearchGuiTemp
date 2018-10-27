@@ -41,6 +41,7 @@ mvctable = {'pf': None, 'df': None, 'dfpf': None}
 percentmvc = 0.2
 volreflexflexion = None
 refsignaltype = None
+refsignalfreq = None
 
 def getSerialResponse():
     global ser
@@ -91,6 +92,8 @@ class VolReflexTrialThread(QThread):
     def standardRun(self):
         global topborder
         global bottomborder
+        global refsignaltype
+        global refsignalfreq
         self.printToVolReflexLabel.emit("Rest Phase")
         starttime = time.time()
         zeroduration = 5
@@ -108,7 +111,11 @@ class VolReflexTrialThread(QThread):
         measuredvalqueue = deque([0, 0, 0])
         [minreferenceval, maxreferenceval, referencevalspan] = getMinMaxRefLevels()
         starttime = time.time()
-        trialduration = 60
+        if refsignaltype == 'sine':
+            period = 1/refsignalfreq
+            trialduration = 20*period + 5  #trial will last 20 periods plus a 5 second adjustment period
+        else:
+            trialduration = 60
         endtime = starttime + trialduration
         self.printToVolReflexLabel.emit("Match the Reference Line")
         while (time.time() < endtime):
@@ -587,18 +594,28 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def setReferenceSignal(self, btn_volreflexreferencesignal):
         global refsignaltype
+        global refsignalfreq
         btntext = btn_volreflexreferencesignal.text()
         if (btntext == "Other"):
             self._volreflexreferencesignal = None
             refsignaltype = 'other'
+            refsignalfreq = None
         elif (btntext == "PRBS"):
             refsignaltype = 'prbs'
+            refsignalfreq = None
             self._volreflexreferencesignal = btntext
         elif (btntext == "Step"):
             refsignaltype = 'step'
+            refsignalfreq = None
             self._volreflexreferencesignal = btntext
         else:
             refsignaltype = 'sine'
+            # get sinusoid frequency
+            freqtext = btntext
+            hzind = freqtext.find('Hz')
+            freqtext = freqtext[0:hzind]
+            refsignalfreq = float(freqtext)
+            # make frequency info ready to add to filename
             btntext = btntext.replace(" ", "")
             self._volreflexreferencesignal = btntext.replace(".", "-")
         self.completeVoluntaryReflexFilename()
