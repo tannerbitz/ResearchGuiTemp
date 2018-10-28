@@ -145,15 +145,15 @@ class VolReflexTrialThread(QThread):
         self.printToVolReflexLabel.emit("Done")
         ser.write(b'<1>')
 
-    def stepRun():
+    def stepRun(self):
         whatever = 0
 
     def run(self):
         global refsignaltype
         if refsignaltype in ['sine', 'prbs', 'other']:
-            standardRun()
+            self.standardRun()
         elif refsignaltype in ['step']:
-            stepRun()
+            self.stepRun()
 
 
 class MainWindow(QtWidgets.QMainWindow):
