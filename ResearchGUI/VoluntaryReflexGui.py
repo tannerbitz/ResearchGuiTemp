@@ -42,7 +42,7 @@ percentmvc = 0.3
 volreflexflexion = None
 refsignaltype = None
 refsignalfreq = None
-
+serialvals = None
 def getSerialResponse():
     global ser
     endtime = time.time() + 0.5
@@ -65,6 +65,7 @@ class VolReflexTrialThread(QThread):
     def getMeasRefSignals(self):
         global measuredsignalchannel
         global referencesignalchannel
+        global serialvals
         ser.write(b'<2>')
         serialstring = getSerialResponse()
         serialvals = serialstring.split(',')
@@ -94,6 +95,7 @@ class VolReflexTrialThread(QThread):
         global bottomborder
         global refsignaltype
         global refsignalfreq
+        global serialvals
         self.printToVolReflexLabel.emit("Rest Phase")
         starttime = time.time()
         zeroduration = 5
@@ -101,7 +103,7 @@ class VolReflexTrialThread(QThread):
         zerolevel = 0
         endtime = starttime + zeroduration
         while (time.time() < endtime):
-            [referenceval, measuredval] = getMeasRefSignals()
+            [referenceval, measuredval] = self.getMeasRefSignals()
             zerocount = zerocount + 1
             zerolevel = zerolevel + (measuredval - zerolevel)/zerocount
             progressbarval = round(100*(time.time() - starttime)/zeroduration)
@@ -109,7 +111,7 @@ class VolReflexTrialThread(QThread):
 
         zerolevel = int(zerolevel)
         measuredvalqueue = deque([0, 0, 0])
-        [minreferenceval, maxreferenceval, referencevalspan] = getMinMaxRefLevels()
+        [minreferenceval, maxreferenceval, referencevalspan] = self.getMinMaxRefLevels()
         starttime = time.time()
         if refsignaltype == 'sine':
             period = 1/refsignalfreq
@@ -119,7 +121,7 @@ class VolReflexTrialThread(QThread):
         endtime = starttime + trialduration
         self.printToVolReflexLabel.emit("Match the Reference Line")
         while (time.time() < endtime):
-            [referenceval, measuredval] = getMeasRefSignals()
+            [referenceval, measuredval] = self.getMeasRefSignals()
             measuredvalqueue.popleft()
             measuredvalqueue.append(serval2torqueNm*(measuredval - zerolevel))
             measuredval = np.mean(measuredvalqueue)
@@ -667,7 +669,7 @@ class MainWindow(QtWidgets.QMainWindow):
             else:
                 #Set Plot Ranges for Test
                 self.lbl_trialflexionmvc.setText(str(round(mvctable['df'],2)))
-                refsignalmax = (percentmvc*mvctable['pf'])
+                refsignalmax = (percentmvc*mvctable['df'])
                 refsignalmin = 0
                 refsignalspan = abs(refsignalmax - refsignalmin)
                 topborder = refsignalmax+0.6*refsignalspan
