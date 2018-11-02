@@ -114,20 +114,19 @@ function res = analyzedata()
     end
     
     nommeascycle_nm = nommeascycle*res2lbs*lbs2newtons*armlength;
-    [M, I] = max(nommeascycle_nm);
-       
-    
-    close all
-    figure(1)
-    plot(nomrefcycle_nm);
-    hold on
-    plot(nommeascycle_nm);
-    legend('ref', 'meas')
-    plot(I, M, 'r*')
-    hold off
-    
-    
-    
 
-    res = cycleslost;
+    res = [nomrefcycle_nm; nommeascycle_nm];
+    
+    %     [M, I] = max(nommeascycle_nm);
+%        
+%     
+%     close all
+%     figure(1)
+%     plot(nomrefcycle_nm);
+%     hold on
+%     plot(nommeascycle_nm);
+%     legend('ref', 'meas')
+%     plot(I, M, 'r*')
+%     hold off
+
 end
